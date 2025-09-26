@@ -133,7 +133,7 @@ export default function Home() {
 
   const addToCart = (product: Product) => {
     const storedCart = localStorage.getItem("cart");
-    let cart: Product[] = storedCart ? JSON.parse(storedCart) : [];
+    const cart: Product[] = storedCart ? JSON.parse(storedCart) : [];
 
     const existing = cart.find((p) => p.id === product.id);
     if (existing) {

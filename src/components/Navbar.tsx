@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ShoppingCart } from "lucide-react";
 import { useEffect, useState } from "react";
+import Image from "next/image";
 
 type NavbarProps = {
   cartCount?: number;
@@ -30,7 +31,7 @@ export default function Navbar({ cartCount = 0 }: NavbarProps) {
       {/* Logo */}
       <Link href="/">
       <div className="flex items-center space-x-2">
-        <img src="/images/Logo.svg" alt="Africa Market" className="h-12 w-12" />
+        <Image src="/images/Logo.svg" alt="Africa Market" className="h-12 w-12" />
         <span className="font-bold text-1xl">Africa Market place</span>
       </div>
       </Link>

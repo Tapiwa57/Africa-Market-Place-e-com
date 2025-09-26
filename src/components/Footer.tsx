@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { useState } from "react";
+import Image from "next/image";
 
 export default function Footer() {
   return (
@@ -21,9 +22,9 @@ export default function Footer() {
         <div>
           <h3 className="font-bold mb-2">Follow Us</h3>
           <div className="flex space-x-3">
-            <img src="/images/Vector-facebook.svg" alt="Facebook" className="w-5 h-5" />
-            <img src="/images/ri_whatsapp-fill.svg" alt="WhatsApp" className="w-5 h-5" />
-            <img src="/images/ri_instagram-fill.svg" alt="Instagram" className="w-5 h-5" />
+            <Image src="/images/Vector-facebook.svg" alt="Facebook" className="w-5 h-5" />
+            <Image src="/images/ri_whatsapp-fill.svg" alt="WhatsApp" className="w-5 h-5" />
+            <Image src="/images/ri_instagram-fill.svg" alt="Instagram" className="w-5 h-5" />
           </div>
         </div>
       </div>
