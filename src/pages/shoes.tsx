@@ -18,6 +18,8 @@ export default function Shoes() {
   const [company, setCompany] = useState("All");
   const [minPrice, setMinPrice] = useState(0);
 const [maxPrice, setMaxPrice] = useState(2000);
+ const [cart, setCart] = useState([]); // your cart state
+      const cartCount = cart.length;
  const filteredShoes = shoesData.filter((shoe) => {
   return (
     (gender === "All" || shoe.gender === gender) &&
@@ -30,7 +32,7 @@ const [maxPrice, setMaxPrice] = useState(2000);
 
   return (
     <div>
-      <Navbar />
+      <Navbar cartCount={cartCount} />
       <div className="px-6 py-10 grid grid-cols-1 md:grid-cols-4 gap-6">
         {/* Filters Sidebar */}
         <aside className="bg-white shadow rounded-lg p-4">

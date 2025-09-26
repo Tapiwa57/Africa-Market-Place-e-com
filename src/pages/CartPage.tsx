@@ -1,146 +1,121 @@
 import Image from "next/image";
-import { FaCreditCard, FaHeadset } from "react-icons/fa";
+import Footer from "@/components/Footer";
+import { useEffect, useState } from "react";
+import Link from "next/link";
+
+type Product = {
+  id: number;
+  title: string;
+  price: number;
+  type: string;
+  country: string;
+  company: string;
+  image: string;
+  quantity: number;
+};
 
 export default function CartPage() {
+  const [cart, setCart] = useState<Product[]>([]);
+
+  // Load cart from localStorage on mount
+  useEffect(() => {
+    const storedCart = localStorage.getItem("cart");
+    if (storedCart) {
+      setCart(JSON.parse(storedCart));
+    }
+  }, []);
+
+  // Update localStorage whenever cart changes
+  useEffect(() => {
+    localStorage.setItem("cart", JSON.stringify(cart));
+    window.dispatchEvent(new Event("cartUpdated")); // Update Navbar
+  }, [cart]);
+
+  const increaseQty = (id: number) =>
+    setCart((prev) =>
+      prev.map((p) => (p.id === id ? { ...p, quantity: p.quantity + 1 } : p))
+    );
+
+  const decreaseQty = (id: number) =>
+    setCart((prev) =>
+      prev.map((p) =>
+        p.id === id && p.quantity > 1 ? { ...p, quantity: p.quantity - 1 } : p
+      )
+    );
+
+  const removeItem = (id: number) => setCart((prev) => prev.filter((p) => p.id !== id));
+
+  const subtotal = cart.reduce((acc, item) => acc + item.price * item.quantity, 0);
+
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Navbar */}
-      <header className="bg-gray-400 text-white flex justify-between items-center px-8 py-4">
-        <div className="flex items-center gap-2">
-          <div className="bg-white text-gray-700 px-2 py-1 rounded font-bold">
-            Africa Market place
-          </div>
-        </div>
-        <div className="flex items-center gap-3">
-          <span>Mr Ndemera</span>
-          <div className="w-10 h-10 rounded-full overflow-hidden bg-gray-300">
-            <Image
-              src="/images/avatar.png"
-              alt="profile"
-              width={40}
-              height={40}
-            />
-          </div>
-        </div>
-      </header>
+      <nav className="flex items-center justify-between px-6 py-4 shadow bg-white">
+        <Link href="/" className="font-bold text-xl">
+          Africa Market Place
+        </Link>
+      </nav>
 
-      {/* Title */}
       <div className="text-center my-8">
         <h1 className="text-2xl font-bold">Shopping Cart</h1>
-        <p className="text-gray-500">Home</p>
+        <p className="text-gray-500">Home / Cart</p>
       </div>
 
-      {/* Cart Section */}
       <div className="flex flex-col md:flex-row gap-8 max-w-6xl mx-auto px-6">
-        {/* Cart Table */}
+        {/* Cart Items */}
         <div className="flex-1 bg-white shadow-md rounded-lg overflow-hidden">
-          <table className="w-full text-left border-collapse">
-            <thead className="bg-black text-white">
-              <tr>
-                <th className="p-4">Product</th>
-                <th className="p-4">Price</th>
-                <th className="p-4">Quantity</th>
-                <th className="p-4">Subtotal</th>
-              </tr>
-            </thead>
-            <tbody>
-              {/* Product 1 */}
-              <tr className="border-b">
-                <td className="p-4 flex items-center gap-3">
-                  <button className="text-red-500 font-bold">X</button>
-                  <Image
-                    src="/images/shoe.png"
-                    alt="Bata Zimbabwe"
-                    width={50}
-                    height={50}
-                  />
-                  <div>
-                    <p className="font-semibold">Bata Zimbabwe</p>
-                    <p className="text-sm text-gray-500">Tommy-Tennis</p>
-                  </div>
-                </td>
-                <td className="p-4">$20.00</td>
-                <td className="p-4 flex items-center gap-2">
-                  <button className="px-2 border">-</button>
-                  <span>5</span>
-                  <button className="px-2 border">+</button>
-                </td>
-                <td className="p-4">$100.00</td>
-              </tr>
-
-              {/* Product 2 */}
-              <tr className="border-b">
-                <td className="p-4 flex items-center gap-3">
-                  <button className="text-red-500 font-bold">X</button>
-                  <Image
-                    src="/images/laptop.png"
-                    alt="HP Distributor"
-                    width={50}
-                    height={50}
-                  />
-                  <div>
-                    <p className="font-semibold">Hp Distributor</p>
-                    <p className="text-sm text-gray-500">Laptop Pro 4023</p>
-                  </div>
-                </td>
-                <td className="p-4">$50.00</td>
-                <td className="p-4 flex items-center gap-2">
-                  <button className="px-2 border">-</button>
-                  <span>5</span>
-                  <button className="px-2 border">+</button>
-                </td>
-                <td className="p-4">$250.00</td>
-              </tr>
-
-              {/* Product 3 */}
-              <tr className="border-b">
-                <td className="p-4 flex items-center gap-3">
-                  <button className="text-red-500 font-bold">X</button>
-                  <Image
-                    src="/images/keyboard.png"
-                    alt="Musungo Gaming Combo"
-                    width={50}
-                    height={50}
-                  />
-                  <div>
-                    <p className="font-semibold">Musungo</p>
-                    <p className="text-sm text-gray-500">Gaming Combo</p>
-                  </div>
-                </td>
-                <td className="p-4">$20.00</td>
-                <td className="p-4 flex items-center gap-2">
-                  <button className="px-2 border">-</button>
-                  <span>1</span>
-                  <button className="px-2 border">+</button>
-                </td>
-                <td className="p-4">$20.00</td>
-              </tr>
-
-              {/* Product 4 */}
-              <tr>
-                <td className="p-4 flex items-center gap-3">
-                  <button className="text-red-500 font-bold">X</button>
-                  <Image
-                    src="/images/iphone.png"
-                    alt="Apple Store iPhone 16 Pro"
-                    width={50}
-                    height={50}
-                  />
-                  <div>
-                    <p className="font-semibold">Apple Store</p>
-                    <p className="text-sm text-gray-500">iPhone 16 Pro</p>
-                  </div>
-                </td>
-                <td className="p-4">$20.00</td>
-                <td className="p-4 flex items-center gap-2">
-                  <button className="px-2 border">-</button>
-                  <span>5</span>
-                  <button className="px-2 border">+</button>
-                </td>
-                <td className="p-4">$100.00</td>
-              </tr>
-            </tbody>
-          </table>
+          {cart.length === 0 ? (
+            <p className="p-4 text-center text-gray-500">Your cart is empty</p>
+          ) : (
+            <table className="w-full text-left border-collapse">
+              <thead className="bg-black text-white">
+                <tr>
+                  <th className="p-4">Product</th>
+                  <th className="p-4">Price</th>
+                  <th className="p-4">Quantity</th>
+                  <th className="p-4">Subtotal</th>
+                </tr>
+              </thead>
+              <tbody>
+                {cart.map((item) => (
+                  <tr key={item.id} className="border-b">
+                    <td className="p-4 flex flex-col md:flex-row items-start md:items-center gap-3">
+                      <button
+                        className="text-red-500 font-bold"
+                        onClick={() => removeItem(item.id)}
+                      >
+                        X
+                      </button>
+                      <Image src={item.image} alt={item.title} width={50} height={50} />
+                      <div>
+                        <p className="font-semibold">{item.title}</p>
+                        <p className="text-xs text-gray-500">
+                          {item.type} | {item.country} | {item.company}
+                        </p>
+                      </div>
+                    </td>
+                    <td className="p-4">${item.price.toFixed(2)}</td>
+                    <td className="p-4 flex items-center gap-2">
+                      <button
+                        className="px-2 border hover:bg-gray-100"
+                        onClick={() => decreaseQty(item.id)}
+                      >
+                        -
+                      </button>
+                      <span>{item.quantity}</span>
+                      <button
+                        className="px-2 border hover:bg-gray-100"
+                        onClick={() => increaseQty(item.id)}
+                      >
+                        +
+                      </button>
+                    </td>
+                    <td className="p-4">${(item.price * item.quantity).toFixed(2)}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
         </div>
 
         {/* Order Summary */}
@@ -149,11 +124,11 @@ export default function CartPage() {
           <div className="space-y-2 text-sm">
             <div className="flex justify-between">
               <span>Items</span>
-              <span>16</span>
+              <span>{cart.reduce((acc, item) => acc + item.quantity, 0)}</span>
             </div>
             <div className="flex justify-between">
               <span>Subtotal</span>
-              <span>$470.00</span>
+              <span>${subtotal.toFixed(2)}</span>
             </div>
             <div className="flex justify-between">
               <span>Shipping</span>
@@ -165,11 +140,11 @@ export default function CartPage() {
             </div>
             <div className="flex justify-between text-red-500">
               <span>Coupon Discount</span>
-              <span>-$20.00</span>
+              <span>-$0.00</span>
             </div>
             <div className="flex justify-between font-bold border-t pt-2">
               <span>Total</span>
-              <span>$450.00</span>
+              <span>${subtotal.toFixed(2)}</span>
             </div>
           </div>
           <button className="w-full mt-4 bg-black text-white py-2 rounded hover:bg-gray-800">
@@ -178,59 +153,7 @@ export default function CartPage() {
         </div>
       </div>
 
-      {/* Coupon Section */}
-      <div className="max-w-6xl mx-auto px-6 flex items-center gap-4 mt-6">
-        <input
-          type="text"
-          placeholder="Coupon code"
-          className="flex-1 px-4 py-2 border rounded"
-        />
-        <button className="px-4 py-2 bg-black text-white rounded">
-          Apply Coupon
-        </button>
-        <button className="px-4 py-2 text-gray-600">Clear shopping cart</button>
-      </div>
-
-      {/* Features */}
-      <div className="max-w-6xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 gap-8 my-10 text-center">
-        <div className="flex flex-col items-center gap-2">
-          <FaCreditCard className="text-3xl" />
-          <h4 className="font-semibold">Flexible Payment</h4>
-          <p className="text-sm text-gray-500">
-            Multiple secure payments option
-          </p>
-        </div>
-        <div className="flex flex-col items-center gap-2">
-          <FaHeadset className="text-3xl" />
-          <h4 className="font-semibold">24/7 Support</h4>
-          <p className="text-sm text-gray-500">We support online all days</p>
-        </div>
-      </div>
-
-      {/* Newsletter */}
-      <div className="bg-white py-10 text-center">
-        <h4 className="font-semibold mb-2">Our Newsletter</h4>
-        <h2 className="text-xl font-bold mb-4">
-          Subscribe to Our newsletter to <br />
-          Get Updates on Our Latest Offers
-        </h2>
-        <div className="flex justify-center gap-2 max-w-md mx-auto">
-          <input
-            type="email"
-            placeholder="Enter email"
-            className="flex-1 px-4 py-2 border rounded"
-          />
-          <button className="px-4 py-2 bg-black text-white rounded">
-            Subscribe
-          </button>
-        </div>
-      </div>
-
-      {/* Footer */}
-      <footer className="text-center text-sm text-gray-500 py-6">
-        © AMP 2025. All rights reserved. AMP Money is a division of the Africa
-        Market Place Group Ltd.
-      </footer>
+      <Footer />
     </div>
   );
 }

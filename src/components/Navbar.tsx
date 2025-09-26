@@ -1,25 +1,39 @@
 import Link from "next/link";
 import { ShoppingCart } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
-export default function Navbar() {
+type NavbarProps = {
+  cartCount?: number;
+};
+
+export default function Navbar({ cartCount = 0 }: NavbarProps) {
+  const [count, setCount] = useState(cartCount);
   const [open, setOpen] = useState(false);
 
-  const countries = [
-    "zimbabwe",
-    "southafrica",
-    "nigeria",
-    "kenya",
-    "egypt",
-  ];
+  const countries = ["zimbabwe", "southafrica", "nigeria", "kenya", "egypt"];
+
+  useEffect(() => {
+    const storedCart = localStorage.getItem("cart");
+    if (storedCart) setCount(JSON.parse(storedCart).length);
+
+    const handleCartUpdate = () => {
+      const updatedCart = localStorage.getItem("cart");
+      setCount(updatedCart ? JSON.parse(updatedCart).length : 0);
+    };
+
+    window.addEventListener("cartUpdated", handleCartUpdate);
+    return () => window.removeEventListener("cartUpdated", handleCartUpdate);
+  }, []);
 
   return (
     <nav className="flex items-center justify-between px-6 py-4 shadow bg-white relative">
       {/* Logo */}
+      <Link href="/">
       <div className="flex items-center space-x-2">
         <img src="/images/Logo.svg" alt="Africa Market" className="h-12 w-12" />
         <span className="font-bold text-1xl">Africa Market place</span>
       </div>
+      </Link>
 
       {/* Links */}
       <div className="hidden md:flex space-x-6 font-medium items-center">
@@ -29,10 +43,7 @@ export default function Navbar() {
 
         {/* Country Dropdown */}
         <div className="relative">
-          <button
-            onClick={() => setOpen(!open)}
-            className="hover:text-blue-600"
-          >
+          <button onClick={() => setOpen(!open)} className="hover:text-blue-600">
             Country ▾
           </button>
           {open && (
@@ -52,9 +63,16 @@ export default function Navbar() {
       </div>
 
       {/* Actions */}
-      <div className="flex items-center space-x-4">
+      <div className="flex items-center space-x-4 relative">
         <Link href="/CartPage">
-        <ShoppingCart className="w-6 h-6 cursor-pointer" />
+          <div className="relative cursor-pointer">
+            <ShoppingCart className="w-6 h-6" />
+            {count > 0 && (
+              <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center">
+                {count}
+              </span>
+            )}
+          </div>
         </Link>
         <Link href="/auth" className="text-sm hover:underline">
           Sign Up / Sign In

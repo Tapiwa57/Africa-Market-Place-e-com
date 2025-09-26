@@ -4,12 +4,36 @@ import Link from "next/link";
 type CategoryCardProps = {
   title: string;
   image: string;
-  price?: string; // 👈 price is optional
+  price?: string;
+};
+
+const categoryLinks: Record<string, string> = {
+  "Motor Vehicles": "/motorvehicles",
+  "Women Clothes": "/womenclothes",
+  "Men Clothes": "/menclothes",
+  "Electronics": "/electronics",
+  "Shoes": "/shoes",
+  "Kitchen Gadget": "/kitchengadget",
+  "Business Electronics": "/businesselectronics",
+  "Gaming Electronics": "/gamingelectronics",
+  "Mobile Phones": "/mobilephones",
+  "Groceries & Corporates": "/groceriescorporates",
+  "Jewelry & Watches": "/jewelrywatches",
 };
 
 export default function CategoryCard({ title, image, price }: CategoryCardProps) {
+  const normalizedTitle = title
+    .toLowerCase()
+    .split(" ")
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(" ");
+
+  const link =
+    categoryLinks[normalizedTitle] ||
+    `/${title.toLowerCase().replace(/\s+/g, "-")}`;
+
   return (
-    <Link href={`/${title.toLowerCase().replace(/\s+/g, "-")}`}>
+    <Link href={link}>
       <div
         className="bg-white rounded-lg shadow p-4 flex-shrink-0 cursor-pointer 
                    transform transition duration-300 ease-in-out 

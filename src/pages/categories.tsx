@@ -1,11 +1,14 @@
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import CategoryCard from "@/components/CategoryCard";
+import { useState } from "react";
 
 export default function Categories() {
+  const [cart, setCart] = useState([]); // your cart state
+    const cartCount = cart.length;
   return (
     <div>
-      <Navbar />
+      <Navbar cartCount={cartCount} />
       <main className="px-6 py-12">
         <h1 className="text-2xl font-bold mb-4">Categories</h1>
         <p className="text-gray-600">Explore our product categories.</p>
